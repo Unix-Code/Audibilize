@@ -2,15 +2,16 @@
   "manifest_version": 2,
   "name": "Audibilize",
   "version": "0.1",
+  "permissions": ["tabs"],
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "js": ["jquery-3.3.1.min.js", "index.js"]
+      "js": ["jquery-3.3.1.min.js", "shared.js", "oscillator.js", "content.js", "tones.js"]
     }
   ],
   "background": {
     "scripts": ["background.js"]
-  },
+  }
 }
