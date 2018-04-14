@@ -121,13 +121,13 @@ document.addEventListener("keydown", function(e){
 		}
 		if (ctrlPressed && shiftPressed && rightAngleBracketPressed) {
 			console.log("Execute Thing"); // Placeholder
-			graphIndex++;
-			var img = package.imgs[graphIndex];
-			var endpoint = "https://172.18.4.248:5000/data_points";
 
+			var image = package.imgs[0][0]; //Test
+			var endpoint = "http://172.18.4.248:5000/data_points";
+			console.log(image.src);
 
 				$.post(endpoint, JSON.stringify({
-						"url": img.src,
+						"url": image.src,
 						"step" : 3
 					}), deliver);
 		}
@@ -137,6 +137,7 @@ document.addEventListener("keydown", function(e){
 var imgs = document.getElementsByTagName("img");
 imgs = sortImgs(imgs);
 var package = {};
+var graphIndex = 0;
 var imgUrls = imgs.map((x) => x[0].src);
 // console.log(imgUrls);
 sendToIndico('custom/batch/predict', imgUrls, sendResultsToBackground);
