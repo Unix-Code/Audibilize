@@ -9,6 +9,7 @@
 import cv2 as cv
 import numpy as np
 import urllib
+import json
 
 def url_to_image(url):
     resp = urllib.urlopen(url)
@@ -101,21 +102,24 @@ def locate_point(url, step):
 
 
 
-    points = dict()
+    pointsy = []
+    pointsx = []
 
     for j in range(yy, f.shape[1], step):
         isset = False
         for i in range(f.shape[0]-1, -1, -1):
             if grayf[i][j] == 0:
-                points[j] = f.shape[0] - i
+                pointsy.append(f.shape[0] - i)
+		pointsx.append(j) 
                 isset = True
                 break
         if not isset:
             break
 
     res = dict()
-    res['points'] = points
+    res['x'] = pointsx
+    res['y'] = pointsy
 
-    res['maxy'] = max(points.values())
-    res['miny'] = min(points.values())
-    return res
+    res['maxy'] = max(pointsy)
+    res['miny'] = min(pointsy)
+    return json.dumps(res)
