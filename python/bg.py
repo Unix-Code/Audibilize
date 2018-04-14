@@ -1,7 +1,9 @@
 from flask import request,Flask
+from flask_cors import CORS
 from point import locate_point
 import json
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/")
 def hello():
@@ -19,6 +21,3 @@ def parse_request():
     return res
 
 app.run(host='172.18.4.248')
-
-
-

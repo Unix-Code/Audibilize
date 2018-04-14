@@ -1,9 +1,9 @@
 (function() {
-	
+
 var validExtension = function (url) {
     return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
 }
-	
+
 var getOffset = function (el) {
   el = el.getBoundingClientRect();
   return {
@@ -17,7 +17,7 @@ var comparePos = function (pos1, pos2) {
 	var x2 = pos2.left;
 	var y1 = pos1.top;
 	var y2 = pos2.top;
-	
+
 	if (y1 === y2) {
 		return x2 - x1;
 	}
@@ -33,7 +33,7 @@ var sortImgs = function (imgsColl) {
 	var imgPosPairs = imgs.map(img => [img, getOffset(img)]);
 	//console.log(imgPosPairs);
 	imgPosPairs.sort((pair1, pair2) => comparePos(pair1[1], pair2[1]));
-	
+
 	return imgPosPairs;
 }
 
@@ -71,7 +71,7 @@ var displayResults = function (data) {
 }
 
 var sendResultsToBackground = function (data) {
-	var package = {};
+	package = {};
 	package.predictions = JSON.parse(data).results;
 	package.imgs = imgs;
 	package.message = "line-graphs-loaded";
@@ -102,6 +102,11 @@ document.addEventListener("keyup", function(e) {
 	}
 });
 
+var deliver = function (data) {
+	chrome.runtime.sendMessage({"data": data, "message" : "audibilize-graph"}, function(response) {
+	});
+}
+
 document.addEventListener("keydown", function(e){
 	if (!e.repeat) {
 		// console.log("Pressed: " + e.key);
@@ -117,14 +122,21 @@ document.addEventListener("keydown", function(e){
 		if (ctrlPressed && shiftPressed && rightAngleBracketPressed) {
 			console.log("Execute Thing"); // Placeholder
 			graphIndex++;
-			chrome.runtime.sendMessage({"graphIndex": graphIndex, "message" : "audibilize-graph"}, function(response) {
-			});
+			var img = package.imgs[graphIndex];
+			var endpoint = "https://172.18.4.248:5000/data_points";
+
+
+				$.post(endpoint, JSON.stringify({
+						"url": img.src,
+						"step" : 3
+					}), deliver);
 		}
 	}
 });
 
 var imgs = document.getElementsByTagName("img");
 imgs = sortImgs(imgs);
+var package = {};
 var imgUrls = imgs.map((x) => x[0].src);
 // console.log(imgUrls);
 sendToIndico('custom/batch/predict', imgUrls, sendResultsToBackground);
