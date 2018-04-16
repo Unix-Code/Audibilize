@@ -1,3 +1,4 @@
+!apt update && apt install -y libsm6 libxext6
 from flask import request,Flask
 from flask_cors import CORS
 from point import locate_point
