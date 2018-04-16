@@ -10,13 +10,24 @@ import cv2 as cv
 import numpy as np
 import urllib
 import json
+import requests
 
 def url_to_image(url):
     resp = urllib.urlopen(url)
     image = np.asarray(bytearray(resp.read()), dtype="uint8")
-    image = cv.imdecode(image, cv.IMREAD_COLOR)
+    print(image)
+    nparr = np.frombuffer(image, np.uint8)
+    image = cv.imdecode(nparr, cv.IMREAD_COLOR)
+    '''
+    if type(image) is None :
+        image = cv.imdecode(img, cv.IMREAD_COLOR)
+    
+    if type(image) is None :
+        response = requests.get(url)
+        print(response.content)
+        image = cv.imdecode(np.asarray(bytearray(response.content)), 1)
+    '''
     return image
-
 
 def detect(img, x, y, t, th):
     if t > th:
@@ -59,7 +70,7 @@ def detect(img, x, y, t, th):
 
 
 def locate_point(url, step):
-
+    print(url);
     f = url_to_image(url)
 
     for i in f:
