@@ -20,4 +20,4 @@ def parse_request():
     res = locate_point(url, step)
     return res
 
-app.run(host='172.18.4.248')
+#app.run(host='172.18.4.248')
